@@ -22,16 +22,17 @@ async def private_receive_handler(c: Client, m: Message):
         return await m.reply_photo(
             photo="https://i.postimg.cc/mrT4tt5b/IMG-20250905-160239-566.jpg",
             caption=(
-                "🚫 <b>ᴘᴇʀꜱᴏɴᴀʟ ʙᴏᴛ ɴᴏᴛɪᴄᴇ</b>\n\n"
-                "ʏᴏᴜ ᴀʀᴇ ᴀᴛᴛᴇᴍᴘᴛɪɴɢ ᴛᴏ ᴜꜱᴇ ᴀ ʙᴏᴛ ᴛʜᴀᴛ ɪꜱ "
+                "🚫 **ᴘᴇʀꜱᴏɴᴀʟ ʙᴏᴛ ɴᴏᴛɪᴄᴇ**\n\n"
+                "ʏᴏᴜ ᴀʀᴇ ᴀᴛᴛᴇᴍᴘᴛɪɴɢ ᴛᴏ ᴜꜱᴇ ᴀ ʙᴏᴛ ᴛʜᴀᴛ ɪꜱ ʀᴇꜱᴇʀᴠᴇᴅ ꜰᴏʀ **ᴘᴇʀꜱᴏɴᴀʟ ᴜꜱᴇ ᴏɴʟʏ.**\n\n"
+                "⚡ ᴛʜɪꜱ ʙᴏᴛ ɪꜱ ᴏɴʟʏ ꜰᴏʀ ᴏᴜʀ ᴘʀɪᴠᴀᴛᴇ ᴡᴇʙꜱɪᴛᴇ & ᴛᴇᴀᴍ.\n\n"
                 "<b>ʀᴇꜱᴇʀᴠᴇᴅ ꜰᴏʀ ᴘᴇʀꜱᴏɴᴀʟ ᴜꜱᴇ ᴏɴʟʏ.</b>\n\n"
-                "ʙᴜᴛ ᴅᴏɴ'ᴛ ᴡᴏʀʀʏ ❤️\n"
-                "ᴡᴇ ʜᴀᴠᴇ ᴀ <b>ᴘᴜʙʟɪᴄ ᴠᴇʀꜱɪᴏɴ</b> ꜰᴏʀ ʏᴏᴜ!\n\n"
+                "❤️ **ʙᴜᴛ ᴅᴏɴ'ᴛ ᴡᴏʀʀʏ!** ᴡᴇ ʜᴀᴠᴇ ᴀ ᴘᴜʙʟɪᴄ ᴠᴇʀꜱɪᴏɴ ꜰᴏʀ ʏᴏᴜ.\n\n"
+                "👉 ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ ꜰᴏʀ ʏᴏᴜʀ ꜰɪʟᴇꜱ, ᴡᴇʙꜱɪᴛᴇꜱ ᴏʀ ᴄʜᴀɴɴᴇʟꜱ:\n"
                 "👉 Use this public bot for your needs:\n"
                 "<a href='https://t.me/File_To_Link_Prime_Bot'>@File_To_Link_Prime_Bot</a>"
             ),
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("🚀 Go To Public Bot", url="https://t.me/File_To_Link_Prime_Bot")]]
+                [[InlineKeyboardButton("🚀 ɢᴏ ᴛᴏ ᴘᴜʙʟɪᴄ ʙᴏᴛ", url="https://t.me/File_To_Link_Prime_Bot")]]
             ),
             parse_mode=enums.ParseMode.HTML
                 )
