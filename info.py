@@ -15,11 +15,11 @@ BIN_CHANNEL = int(environ.get("BIN_CHANNEL", '-1002525477015'))  # File storage 
 LOG_CHANNEL = int(environ.get("LOG_CHANNEL", '-1002152618409'))  # General log channel
 PREMIUM_LOGS = int(environ.get("PREMIUM_LOGS", '-1002152618409'))  # Premium user actions log
 VERIFIED_LOG = int(environ.get('VERIFIED_LOG', '-1002152618409'))  # Verified user actions log
-SUPPORT_GROUP = int(environ.get("SUPPORT_GROUP", "-1002395758041"))
+SUPPORT_GROUP = int(environ.get("SUPPORT_GROUP", "-1002786367937"))
 
 # add admin IDs 11111 2222 3333 and add auth channel IDs -100XXX -100XXX -100XXX
 ADMINS = list(map(int, environ.get('ADMINS', '').split()))  # List of admin user IDs
-AUTH_CHANNEL = list(map(int, environ.get("AUTH_CHANNEL", "-1002245813234 -1002323796637").split()))  # Allowed channels for authorization
+AUTH_CHANNEL = list(map(int, environ.get("AUTH_CHANNEL", "").split()))  # Allowed channels for authorization
 
 # username add without @
 OWNER_USERNAME = environ.get("OWNER_USERNAME", 'Prime_Nayem')  # Owner's username
@@ -48,7 +48,7 @@ SHORTLINK_API = environ.get('SHORTLINK_API', '')  # API key for shortlink
 
 # 💾 MongoDB Connection Information
 DB_URL = environ.get('DATABASE_URI', "")  # MongoDB connection URI
-DB_NAME = environ.get('DATABASE_NAME', "Cluster0")  # MongoDB database name
+DB_NAME = environ.get('DATABASE_NAME', "Cluster01")  # MongoDB database name
 
 # 📸 all Media (Images)
 QR_CODE = environ.get('QR_CODE', 'https://graph.org/file/6afb4093d5ec5c4176979.jpg')  # QR Code image
