@@ -11,7 +11,7 @@ from plugins.avbot import av_verification, is_user_allowed, is_user_joined
 from Script import script
 
 # ✅ শুধু প্রাইভেট ইউজারদের জন্য অনুমতি
-PRIME_USERS = [5926160191]  # <-- এখানে আপনার Prime Users এর আইডি দিন
+PRIME_USERS = [5926160191, 6339186774]  # <-- এখানে আপনার Prime Users এর আইডি দিন
 
 @Client.on_message(filters.private & (filters.document | filters.video | filters.audio), group=4)
 async def private_receive_handler(c: Client, m: Message):
