@@ -22,18 +22,20 @@ async def private_receive_handler(c: Client, m: Message):
         return await m.reply_photo(
             photo="https://i.postimg.cc/mrT4tt5b/IMG-20250905-160239-566.jpg",
             caption=(
-                "🚫 **ᴘᴇʀꜱᴏɴᴀʟ ʙᴏᴛ ɴᴏᴛɪᴄᴇ**\n\n"
-                "ʏᴏᴜ ᴀʀᴇ ᴀᴛᴛᴇᴍᴘᴛɪɴɢ ᴛᴏ ᴜꜱᴇ ᴀ ʙᴏᴛ ᴛʜᴀᴛ ɪꜱ **ʀᴇꜱᴇʀᴠᴇᴅ ꜰᴏʀ ᴘᴇʀꜱᴏɴᴀʟ ᴜꜱᴇ ᴏɴʟʏ.**\n\n"
+                "🚫 <b>ᴘᴇʀꜱᴏɴᴀʟ ʙᴏᴛ ɴᴏᴛɪᴄᴇ</b>\n\n"
+                "ʏᴏᴜ ᴀʀᴇ ᴀᴛᴛᴇᴍᴘᴛɪɴɢ ᴛᴏ ᴜꜱᴇ ᴀ ʙᴏᴛ ᴛʜᴀᴛ ɪꜱ "
+                "<b>ʀᴇꜱᴇʀᴠᴇᴅ ꜰᴏʀ ᴘᴇʀꜱᴏɴᴀʟ ᴜꜱᴇ ᴏɴʟʏ.</b>\n\n"
                 "ʙᴜᴛ ᴅᴏɴ'ᴛ ᴡᴏʀʀʏ ❤️\n"
-                "ᴡᴇ ʜᴀᴠᴇ ᴀ **ᴘᴜʙʟɪᴄ ᴠᴇʀꜱɪᴏɴ** ꜰᴏʀ ʏᴏᴜ!\n\n"
+                "ᴡᴇ ʜᴀᴠᴇ ᴀ <b>ᴘᴜʙʟɪᴄ ᴠᴇʀꜱɪᴏɴ</b> ꜰᴏʀ ʏᴏᴜ!\n\n"
                 "👉 Use this public bot for your needs:\n"
-                "@File_To_Link_Prime_Bot"
+                "<a href='https://t.me/File_To_Link_Prime_Bot'>@File_To_Link_Prime_Bot</a>"
             ),
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🚀 Go To Public Bot", url="https://t.me/File_To_Link_Prime_Bot")]]
             ),
-            parse_mode="Markdown"
-        )
+            parse_mode="HTML"
+                )
+
 
     # ✅ Force subscription check
     if FSUB and not await is_user_joined(c, m):
