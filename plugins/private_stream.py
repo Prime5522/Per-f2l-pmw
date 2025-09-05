@@ -11,7 +11,7 @@ from plugins.avbot import av_verification, is_user_allowed, is_user_joined
 from Script import script
 
 # ✅ Prime Users (only these IDs can use private bot)
-PrimeUsers = [123456789, 987654321]  # এখানে আপনার ইউজার আইডি বসান
+PrimeUsers = [5926160191]#, 987654321]  # এখানে আপনার ইউজার আইডি বসান
 
 # 🚫 Unauthorized users notice banner
 NOTICE_BANNER = "https://i.postimg.cc/mrT4tt5b/IMG-20250905-160239-566.jpg"
@@ -37,7 +37,7 @@ async def private_receive_handler(c: Client, m: Message):
                     [InlineKeyboardButton("🚀 ɢᴏ ᴛᴏ ᴘᴜʙʟɪᴄ ʙᴏᴛ", url="https://t.me/File_To_Link_Prime_Bot")]
                 ]
             ),
-            parse_mode="markdown",
+            parse_mode="Markdown"
         )
 
     # ✅ Force subscription check
