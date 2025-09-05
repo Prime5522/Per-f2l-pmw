@@ -70,7 +70,7 @@ async def render_page(id: str, secure_hash: str, src: str = None) -> str:
         return "Template Error"
 
     # Step 6: Prepare file name safely
-    file_name = file_data.file_name.replace("_", " ") if file_data.file_name else f"PʀɪᴍᴇXBᴏᴛꜱ_{id}.mkv"
+    file_name = file_data.file_name.replace("_", " ") if file_data.file_name else f"PrimeCineZone_{id}.mkv"
 
     # Step 7: Render template with values
     return template.render(
@@ -86,3 +86,4 @@ async def render_page(id: str, secure_hash: str, src: str = None) -> str:
 # Dont Remove My Credit @AV_BOTz_UPDATE 
 # This Repo Is By @BOT_OWNER26 
 # For Any Kind Of Error Ask Us In Support Group @AV_SUPPORT_GROUP
+
