@@ -1,6 +1,6 @@
 import time
 import asyncio
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait
 from info import URL, BOT_USERNAME, BIN_CHANNEL, CHANNEL, PROTECT_CONTENT, FSUB, MAX_FILES
@@ -33,7 +33,7 @@ async def private_receive_handler(c: Client, m: Message):
             reply_markup=InlineKeyboardMarkup(
                 [[InlineKeyboardButton("🚀 Go To Public Bot", url="https://t.me/File_To_Link_Prime_Bot")]]
             ),
-            parse_mode="HTML"
+            parse_mode=enums.ParseMode.HTML
                 )
 
 
