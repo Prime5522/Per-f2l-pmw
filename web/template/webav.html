@@ -122,96 +122,92 @@
             width: 100%;
             height: 100%;
         }
-        /* --- Professional Theme Variables --- */
+       /* --- Professional Balanced Theme Switcher --- */
 :root {
     --bg-body: #0b0f15;
     --bg-card: #121824;
     --bg-btn: #1a2232;
     --text-primary: #ffffff;
-    --text-secondary: #9ca3af;
-    --border-color: rgba(255, 255, 255, 0.1);
-    --accent-color: #00e5ff;
+    --border-accent: #00e5ff;
 }
 
 body.light {
-    --bg-body: #f8fafc;
+    --bg-body: #f1f5f9;
     --bg-card: #ffffff;
-    --bg-btn: #f1f5f9;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --border-color: rgba(0, 0, 0, 0.08);
+    --bg-btn: #e2e8f0;
+    --text-primary: #1e293b;
+    --border-accent: #2563eb;
 }
 
 body {
     background-color: var(--bg-body) !important;
     color: var(--text-primary) !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth Slide Transition */
+    transition: all 0.4s ease;
 }
 
-/* Force colors on specific elements */
-.bg-cardDark, .bg-bgMain, [class*="bg-[#121824]"] { 
+/* Force colors on your existing classes */
+.bg-cardDark, [class*="bg-[#121824]"], .bg-bgMain { 
     background-color: var(--bg-card) !important; 
-    border-color: var(--border-color) !important;
-}
-.bg-btnDark, [class*="bg-btnDark"] { 
-    background-color: var(--bg-btn) !important; 
-    border-color: var(--border-color) !important;
+    border-color: rgba(128, 128, 128, 0.2) !important;
 }
 .text-white, .text-gray-200 { color: var(--text-primary) !important; }
-.text-gray-300, .text-gray-400 { color: var(--text-secondary) !important; }
 
-/* --- Premium Glassmorphism Toggle --- */
-.theme-switch-wrapper {
+/* --- Perfect Sized Floating Toggle --- */
+.theme-wrapper {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 10000; /* একদম সবার উপরে থাকবে */
 }
 
-.theme-switch-btn {
+.theme-btn {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-    padding: 10px 18px;
-    border-radius: 30px;
+    border: 2px solid var(--border-accent); /* নীল বর্ডার দেওয়া হয়েছে যাতে নজরে পড়ে */
+    padding: 8px 16px;
+    border-radius: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s active;
 }
 
-.theme-switch-btn:hover {
-    transform: scale(1.05);
+.theme-btn:active {
+    transform: scale(0.95);
 }
 
-.theme-icon-box {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.5s ease;
+.theme-btn i {
+    font-size: 16px;
+    color: var(--border-accent);
 }
 
-body.light .theme-icon-box {
-    transform: rotate(360deg);
-                             }
+/* মোবাইলের জন্য স্মার্ট অ্যাডজাস্টমেন্ট */
+@media (max-width: 480px) {
+    .theme-wrapper {
+        top: 15px;
+        right: 15px;
+    }
+    .theme-btn span {
+        display: none; /* মোবাইলে শুধু বড় আইকন দেখাবে যাতে লোগোর সাথে ধাক্কা না লাগে */
+    }
+    .theme-btn {
+        padding: 10px; /* আইকনটিকে বড় এবং ক্লিকেবল রাখার জন্য */
+    }
+        }
     </style>
 </head>
 <body class="antialiased pb-20 relative min-h-screen">
 
-    <!-- Professional Theme Switcher -->
-<div class="theme-switch-wrapper">
-    <button id="theme-toggle-btn" class="theme-switch-btn">
-        <div class="theme-icon-box">
-            <i class="fa-solid fa-sun" id="theme-icon"></i>
-        </div>
-        <span id="theme-text">Light Mode</span>
+    <!-- Theme Toggle Button -->
+<div class="theme-wrapper">
+    <button id="theme-toggle-btn" class="theme-btn" title="Change Theme">
+        <i class="fa-solid fa-circle-half-stroke" id="theme-icon"></i>
+        <span id="theme-text">LIGHT MODE</span>
     </button>
 </div>
 
@@ -489,44 +485,33 @@ body.light .theme-icon-box {
         function vlc_player() { window.location.href = "vlc://{{file_url}}"; }
         function mx_player() { window.location.href = "intent:{{file_url}}#Intent;package=com.mxtech.videoplayer.ad;end"; }
         function n_player() { window.location.href = "nplayer-{{file_url}}"; }
-        // --- Advanced Theme Logic ---
+        // --- Theme Logic ---
 const themeBtn = document.getElementById("theme-toggle-btn");
 const themeIcon = document.getElementById("theme-icon");
 const themeText = document.getElementById("theme-text");
 
-// থিম পরিবর্তন করার ফাংশন
-function setTheme(mode) {
+function applyTheme(mode) {
     if (mode === "light") {
         document.body.classList.add("light");
         themeIcon.className = "fa-solid fa-moon";
-        themeText.innerText = "Dark Mode";
+        themeText.innerText = "DARK MODE";
     } else {
         document.body.classList.remove("light");
         themeIcon.className = "fa-solid fa-sun";
-        themeText.innerText = "Light Mode";
+        themeText.innerText = "LIGHT MODE";
     }
 }
 
-// বাটন ক্লিক ইভেন্ট
 themeBtn.addEventListener("click", () => {
     const isLight = document.body.classList.contains("light");
     const newTheme = isLight ? "dark" : "light";
-    localStorage.setItem("app_theme", newTheme);
-    setTheme(newTheme);
+    localStorage.setItem("theme_preference", newTheme);
+    applyTheme(newTheme);
 });
 
-// পেজ লোড হওয়ার সময় ৩টি ধাপে চেক হবে:
-// ১. আগে সেভ করা চয়েস ২. ইউজারের পিসি/মোবাইলের সেটিং ৩. ডিফল্ট ডার্ক
-const savedTheme = localStorage.getItem("app_theme");
-const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-
-if (savedTheme) {
-    setTheme(savedTheme);
-} else if (systemPrefersLight) {
-    setTheme("light");
-} else {
-    setTheme("dark");
-    }
+// Load Preference
+const savedTheme = localStorage.getItem("theme_preference") || "dark";
+applyTheme(savedTheme);
     </script>
 </body>
 </html>
