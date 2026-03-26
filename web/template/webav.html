@@ -1,4 +1,3 @@
---- START OF FILE webav (5).html ---
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,11 +37,15 @@
     </script>
     
     <style>
+        /* --- Video Player Fixes (Bigger Progress Bar & Sound) --- */
         :root {
-            --plyr-color-main: #00e5ff;
-            --plyr-range-thumb-height: 16px;
-            --plyr-range-track-height: 6px;
-        }
+    --plyr-range-track-height: 10px; /* স্লাইডার বার মোটা করা */
+    --plyr-range-thumb-height: 20px; /* গোল বিন্দু বড় করা */
+}
+.plyr__progress__container { height: 15px; }
+        /* Sound/Control spacing */
+        .plyr--full-ui input[type=range] { color: #00e5ff; }
+        .plyr__control--overlaid { background: rgba(0, 229, 255, 0.8); }
 
         body { 
             background-color: #0b0f15; 
@@ -51,7 +54,7 @@
             background-image: radial-gradient(circle at right center, rgba(0, 229, 255, 0.05), transparent 50%);
         }
 
-        /* --- Animations --- */
+        /* --- Original Animations --- */
         @keyframes bounce-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes pulse-icon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         @keyframes wiggle-icon { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
@@ -65,6 +68,7 @@
         .btn-hover { transition: all 0.3s ease; }
         .btn-hover:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
+        /* --- DMCA Premium Button --- */
         @keyframes dmca-color-shift {
             0%, 100% { background-color: #00e5ff; color: #000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
             50% { background-color: #2563eb; color: #fff; box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); }
@@ -78,12 +82,7 @@
             transform: skewX(-20deg); animation: shine-sweep 3s infinite; pointer-events: none;
         }
 
-        @keyframes ripple-shield { 0% { transform: scale(0.9); opacity: 0.8; border-color: #00e5ff; } 100% { transform: scale(1.6); opacity: 0; border-color: #2563eb; } }
-        .anim-ripple { animation: ripple-shield 2.5s infinite ease-out; }
-
-        @keyframes float-slow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        .anim-float-slow { animation: float-slow 3s infinite ease-in-out; }
-
+        /* Modal Popup Reveal */
         @keyframes reveal-light {
             0% { opacity: 0; transform: scale(0.85) translateY(20px); filter: blur(10px) brightness(1.5); }
             100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px) brightness(1); }
@@ -94,21 +93,12 @@
         ::-webkit-scrollbar-track { background: #121824; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
 
-        .plyr { width: 100%; border-radius: 12px 12px 0 0; }
+        .plyr { width: 100%; border-radius: 0; }
         .plyr video { object-fit: contain !important; width: 100%; height: 100%; }
 
-        :root {
-            --bg-body: #0b0f15;
-            --bg-card: #121824;
-            --text-primary: #ffffff;
-            --border-accent: #00e5ff;
-        }
-        body.light {
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --border-accent: #2563eb;
-        }
+        /* Theme Switcher Styles */
+        :root { --bg-body: #0b0f15; --bg-card: #121824; --text-primary: #ffffff; --border-accent: #00e5ff; }
+        body.light { --bg-body: #f1f5f9; --bg-card: #ffffff; --text-primary: #1e293b; --border-accent: #2563eb; }
         body { background-color: var(--bg-body) !important; color: var(--text-primary) !important; transition: all 0.4s ease; }
         .bg-cardDark, .bg-bgMain { background-color: var(--bg-card) !important; }
         
@@ -119,9 +109,38 @@
             display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700;
         }
         @media (max-width: 480px) { .theme-btn span { display: none; } }
+        
+@keyframes float-dmca {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.dmca-floating {
+    position: fixed;
+    bottom: 50px; /* কপিরাইট টেক্সটের উপরে থাকবে */
+    right: 20px;
+    z-index: 100;
+    animation: float-dmca 3s infinite ease-in-out;
+}
+
+/* --- কপিরাইট টেক্সট একদম নিচে ফিক্সড --- */
+.fixed-copyright {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(11, 15, 21, 0.9);
+    backdrop-filter: blur(5px);
+    text-align: center;
+    padding: 8px 0;
+    font-size: 11px;
+    font-weight: bold;
+    color: #9ca3af;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 101;
+            }
     </style>
 </head>
-<body class="antialiased pb-20 relative min-h-screen">
+<body class="antialiased pb-24 relative min-h-screen">
 
     <!-- Theme Toggle -->
     <div class="theme-wrapper">
@@ -137,15 +156,17 @@
             <i class="fas fa-clapperboard text-rose-600 anim-beat text-2xl md:text-3xl"></i>
             <div><span class="text-pink-400">ᴘʀɪᴍᴇ</span> <span class="text-[#00e5ff]">ɴᴇᴛᴡᴏʀᴋ</span></div>
         </h1>
-        <p class="text-[13px] text-gray-300 flex items-center gap-1.5 mt-1">
+        <p class="text-[13px] text-gray-300 flex items-center gap-1.5 mt-1 font-bold">
             <i class="fas fa-bolt text-gray-300 anim-pulse"></i> ᴘʀɪᴍᴇ ꜱᴛʀᴇᴀᴍɪɴɢ ᴘʟᴀᴛꜰᴏʀᴍ
         </p>
     </header>
 
     <!-- Main Container -->
     <main class="w-full max-w-[600px] mx-auto px-4 z-10 relative">
+        
+        <!-- Video Player Card -->
         <div class="bg-[#121824] rounded-xl overflow-hidden border border-[#1f2937] shadow-xl mb-6 flex flex-col">
-            <div class="p-4 bg-[#121824] border-b border-[#1f2937] z-10">
+            <div class="p-4 bg-[#121824] border-b border-[#1f2937]">
                 <h2 class="text-[#00e5ff] font-tech text-[16px] md:text-xl font-extrabold flex items-start gap-2.5">
                     <i class="fas fa-play-circle mt-1 text-[#00e5ff] anim-pulse"></i>
                     <span class="break-words tracking-wide text-white">{{file_name}}</span>
@@ -153,8 +174,8 @@
             </div>
 
             <!-- Player -->
-            <div class="relative w-full aspect-video bg-black flex items-center justify-center">
-                <video id="player" playsinline controls preload="metadata">
+            <div class="relative w-full aspect-video bg-black">
+                <video id="player" playsinline controls preload="auto">
                     <source src="{{file_url}}" type="video/mp4" />
                 </video>
             </div>
@@ -169,15 +190,14 @@
         <!-- Action Buttons -->
         <div class="space-y-4 mb-8">
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="streamDownload()" class="btn-hover bg-[#e11d48] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2">
+                <button onclick="streamDownload()" class="btn-hover bg-[#e11d48] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg">
                     <i class="fas fa-bolt anim-bounce text-yellow-300"></i> Fast Download
                 </button>
-                <button onclick="watchOnline()" class="btn-hover bg-[#2563eb] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2">
+                <button onclick="watchOnline()" class="btn-hover bg-[#2563eb] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg">
                     <i class="fas fa-folder-open anim-wiggle"></i> Watch Online
                 </button>
             </div>
 
-            <!-- External Players -->
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="vlc_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
                     <i class="fas fa-video anim-beat text-orange-500"></i> VLC
@@ -188,151 +208,143 @@
             </div>
             
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="km_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-film anim-bounce text-purple-400"></i> KMPlayer
-                </button>
                 <button onclick="playit_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-play-circle anim-beat text-rose-500"></i> PlayIt
+                    <i class="fas fa-play-circle anim-beat text-green-500"></i> PlayIt
                 </button>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="kodi_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[12px] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-border-all anim-bounce text-blue-300"></i> Kodi
-                </button>
-                <button onclick="n_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[12px] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-mobile-screen anim-wiggle text-cyan-400"></i> nPlayer
-                </button>
-                <button onclick="system_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[12px] font-medium flex items-center justify-center gap-1.5">
+                <button onclick="system_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
                     <i class="fas fa-desktop anim-pulse text-yellow-400"></i> System
                 </button>
             </div>
 
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="km_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
+                    <i class="fas fa-film anim-bounce text-purple-400"></i> KMPlayer
+                </button>
+                <button onclick="kodi_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
+                    <i class="fas fa-border-all anim-pulse text-blue-300"></i> Kodi
+                </button>
+                <button onclick="n_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
+                    <i class="fas fa-mobile-screen anim-wiggle text-cyan-400"></i> nPlayer
+                </button>
+            </div>
+
             <div class="grid grid-cols-2 gap-3 pt-2">
-                <a href="https://t.me/PrimeCineZone" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2">
+                <a href="https://t.me/PrimeCineZone" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2 shadow-lg">
                     <i class="fas fa-paper-plane anim-bounce text-rose-700"></i> PRIME NETWORK™
                 </a>
-                <button onclick="copyToClipboard()" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2">
+                <button onclick="copyToClipboard()" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2 shadow-lg">
                     <i class="fas fa-link anim-pulse"></i> Copy Link
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <div class="fixed bottom-4 left-4 z-30 flex items-center gap-2 text-[11px] text-gray-400">
-        <i class="fas fa-shield-halved text-gray-500 anim-pulse"></i>
-        <span>© 2022-2026 <a href="https://t.me/PrimeXBots" class="text-[#00e5ff]">ᴘʀɪᴍᴇXʙᴏᴛꜱ</a> | ꜱᴇᴄᴜʀᴇ ʙʏ ᴘʀɪᴍᴇ ɴᴇᴛᴡᴏʀᴋ 🤝</span>
-    </div>
+    <!-- ড্যাম-কা ভাসমান বাটন -->
+<div class="dmca-floating">
+    <button onclick="openModal()" class="dmca-color-shift rounded-full px-6 py-2.5 font-black text-[14px] flex items-center gap-2 border border-white/20 shadow-2xl">
+        <i class="fas fa-shield-halved"></i> DMCA
+    </button>
+</div>
 
-    <!-- DMCA Button -->
-    <div class="fixed bottom-4 right-4 z-40 flex items-center justify-center anim-float-slow">
-        <div class="absolute w-[115%] h-[125%] rounded-full border-2 border-[#00e5ff]/50 anim-ripple pointer-events-none"></div>
-        <button onclick="openModal()" class="relative overflow-hidden dmca-color-shift rounded-full px-7 py-2.5 font-bold text-[14px] flex items-center gap-2 border border-white/20">
-            <div class="shine-effect"></div>
-            <i class="fas fa-shield-halved anim-wiggle relative z-10"></i> 
-            <span class="relative z-10 tracking-wide">DMCA</span>
-        </button>
-    </div>
+<!-- একদম নিচে ফিক্সড কপিরাইট টেক্সট -->
+<div class="fixed-copyright">
+    <i class="fas fa-shield-halved text-[#00e5ff] mr-1"></i>
+    © 2022-2026 <a href="https://t.me/PrimeXBots" class="text-[#00e5ff] underline">ᴘʀɪᴍᴇXʙᴏᴛꜱ</a> | ꜱᴇᴄᴜʀᴇ ʙʏ ᴘʀɪᴍᴇ ɴᴇᴛᴡᴏʀᴋ 🤝
+</div>
 
-    <!-- Modal (Original Restored) -->
+    <!-- Modal (Original Design) -->
     <div id="infoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div id="modalBox" class="bg-cardDark border border-[#1f2937] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl opacity-0">
-            <div class="p-4 border-b border-[#1f2937] flex justify-between items-center bg-[#121824]/80 backdrop-blur-md">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2 font-tech">
+            <div class="p-4 border-b border-[#1f2937] flex justify-between items-center bg-[#121824]">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 font-tech italic">
                     <i class="fas fa-circle-info text-[#00e5ff]"></i> Bot Information
                 </h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500 transition-all">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500"><i class="fas fa-times text-xl"></i></button>
             </div>
-
             <div class="p-5 overflow-y-auto space-y-4 text-sm bg-bgMain">
-                <div class="bg-gray-800/40 border border-yellow-500/30 rounded-xl p-4 relative">
-                    <h4 class="text-yellow-500 font-bold text-base mb-2 font-tech flex items-center gap-2">
-                        <i class="fas fa-file-contract"></i> Disclaimer & DMCA
-                    </h4>
-                    <p class="text-gray-400 leading-relaxed text-[13px]">
-                        ᴀʟʟ ꜰɪʟᴇꜱ, ʟɪɴᴋꜱ, ᴀɴᴅ ᴍᴇᴅɪᴀ ᴀᴄᴄᴇꜱꜱᴇᴅ ᴛʜʀᴏᴜɢʜ ᴛʜɪꜱ ʙᴏᴛ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ᴘᴜʙʟɪᴄʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ. ᴛʜɪꜱ ʙᴏᴛ ᴅᴏᴇꜱ ɴᴏᴛ ʜᴏꜱᴛ ᴏʀ ꜱᴛᴏʀᴇ ᴀɴʏ ꜰɪʟᴇꜱ ᴏɴ ɪᴛꜱ ᴏᴡɴ ꜱᴇʀᴠᴇʀꜱ.
-                    </p>
+                <div class="bg-gray-800/40 border border-yellow-500/30 rounded-xl p-4">
+                    <h4 class="text-yellow-500 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-file-contract"></i> Disclaimer & DMCA</h4>
+                    <p class="text-gray-400 leading-relaxed text-[13px]">ᴀʟʟ ꜰɪʟᴇꜱ, ʟɪɴᴋꜱ, ᴀɴᴅ ᴍᴇᴅɪᴀ ᴀᴄᴄᴇꜱꜱᴇᴅ ᴛʜʀᴏᴜɢʜ ᴛʜɪꜱ ʙᴏᴛ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ᴘᴜʙʟɪᴄʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ. ᴛʜɪꜱ ʙᴏᴛ ᴅᴏᴇꜱ ɴᴏᴛ ʜᴏꜱᴛ ᴏʀ ꜱᴛᴏʀᴇ ᴀɴʏ ꜰɪʟᴇꜱ ᴏɴ ɪᴛꜱ ᴏᴡɴ ꜱᴇʀᴠᴇʀꜱ.</p>
                 </div>
-
-                <div class="bg-gray-800/40 border border-blue-500/30 rounded-xl p-4 relative">
-                    <h4 class="text-blue-400 font-bold text-base mb-2 font-tech flex items-center gap-2">
-                        <i class="fas fa-bullhorn"></i> Bot Updates
-                    </h4>
-                    <p class="text-gray-400 leading-relaxed text-[13px] mb-3">
-                        ꜱᴛᴀʏ ᴜᴘᴅᴀᴛᴇᴅ ᴡɪᴛʜ ᴛʜᴇ ʟᴀᴛᴇꜱᴛ ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛꜱ, ꜰɪxᴇꜱ, ᴀɴᴅ ɴᴇᴡ ʙᴏᴛ ʀᴇʟᴇᴀꜱᴇꜱ.
-                    </p>
-                    <a href="https://t.me/PrimeXBots" target="_blank" class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-blue-500/20">
-                        Join Channel <i class="fas fa-arrow-right"></i>
-                    </a>
+                <div class="bg-gray-800/40 border border-blue-500/30 rounded-xl p-4">
+                    <h4 class="text-blue-400 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-bullhorn"></i> Bot Updates</h4>
+                    <a href="https://t.me/PrimeXBots" target="_blank" class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-lg text-xs font-semibold">Join Channel <i class="fas fa-arrow-right"></i></a>
                 </div>
-
-                <div class="bg-gray-800/40 border border-rose-500/30 rounded-xl p-4 relative">
-                    <h4 class="text-rose-400 font-bold text-base mb-2 font-tech flex items-center gap-2">
-                        <i class="fas fa-headset"></i> Contact Support
-                    </h4>
-                    <p class="text-gray-400 leading-relaxed text-[13px] mb-3">
-                        ꜰᴏʀ Qᴜᴇʀɪᴇꜱ, ᴄᴏᴘʏʀɪɢʜᴛ ɪꜱꜱᴜᴇꜱ, ᴏʀ ᴛᴀᴋᴇᴅᴏᴡɴ ʀᴇQᴜᴇꜱᴛꜱ, ʀᴇᴀᴄʜ ᴏᴜᴛ ᴛᴏ ᴜꜱ.
-                    </p>
-                    <a href="https://t.me/MR_PRIME_SUPREME" target="_blank" class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-400 border border-rose-500/50 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-rose-500/20">
-                        Contact Developer <i class="fas fa-paper-plane"></i>
-                    </a>
+                <div class="bg-gray-800/40 border border-rose-500/30 rounded-xl p-4">
+                    <h4 class="text-rose-400 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-headset"></i> Contact Support</h4>
+                    <a href="https://t.me/MR_PRIME_SUPREME" target="_blank" class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-400 border border-rose-500/50 px-4 py-2 rounded-lg text-xs font-semibold">Contact Developer <i class="fas fa-paper-plane"></i></a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         const fileUrl = "{{file_url}}";
         const fileName = "{{file_name}}";
-        let player;
 
+        // URL Clean function for double protocol issues
+        function getCleanUrl() {
+            let url = fileUrl.trim();
+            if (url.startsWith("http:https://")) { url = url.replace("http:https://", "https://"); }
+            return url;
+        }
+
+        let player;
         document.addEventListener('DOMContentLoaded', () => {
             player = new Plyr('#player', {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
                 ratio: '16:9'
             });
+            // Try unmuting sound
+            player.on('ready', () => { player.volume = 1; player.muted = false; });
+            player.on('play', () => { player.muted = false; });
         });
 
-        function watchOnline() {
-            if (player) { player.play(); player.fullscreen.enter(); }
-        }
+        function watchOnline() { if (player) { player.play(); player.fullscreen.enter(); } }
+        function streamDownload() { window.location.href = getCleanUrl(); }
 
-        // --- EXTERNAL PLAYERS (SPELLING FIXED) ---
+        // --- PLAYERS LOGIC (FIXED) ---
         function mx_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};end`;
+            const url = getCleanUrl();
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};end`;
         }
 
         function vlc_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.videolan.vlc;S.title=${encodeURIComponent(fileName)};end`;
+            const url = getCleanUrl();
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.videolan.vlc;S.title=${encodeURIComponent(fileName)};end`;
         }
 
         function playit_player() {
-            // PlayIt (Spelling Fixed)
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.gravity.videoplayer;S.title=${encodeURIComponent(fileName)};end`;
+            const url = getCleanUrl();
+            // CORRECT PlayIt PACKAGE
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.playit.videoplayer;S.title=${encodeURIComponent(fileName)};end`;
         }
 
         function n_player() {
-            // nPlayer supports this direct URL scheme
-            window.location.href = `nplayer-${fileUrl}`;
-        }
-
-        function km_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.kmplayer;end`;
-        }
-
-        function kodi_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.xbmc.kodi;end`;
+            const url = getCleanUrl();
+            if (/Android/i.test(navigator.userAgent)) {
+                window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.newin.nplayer.pro;end`;
+            } else {
+                window.location.href = `nplayer-${url}`;
+            }
         }
 
         function system_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
+            const url = getCleanUrl();
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
         }
 
-        function streamDownload() { window.location.href = fileUrl; }
+        function km_player() {
+            const url = getCleanUrl();
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.kmplayer;end`;
+        }
+
+        function kodi_player() {
+            const url = getCleanUrl();
+            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.xbmc.kodi;end`;
+        }
 
         function updateClock() {
             const now = new Date();
@@ -341,10 +353,9 @@
         setInterval(updateClock, 1000); updateClock();
 
         function copyToClipboard() {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("Link copied!"));
+            navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!"));
         }
 
-        // Modal Control
         const modal = document.getElementById('infoModal');
         const modalBox = document.getElementById('modalBox');
         function openModal() {
@@ -356,27 +367,26 @@
             setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
         }
 
-        // Theme Switch
+        // Theme Toggle
         const themeBtn = document.getElementById("theme-toggle-btn");
         function applyTheme(mode) {
             if (mode === "light") {
                 document.body.classList.add("light");
-                document.getElementById("theme-icon").className = "fa-solid fa-moon";
+                document.getElementById("theme-icon").className = "fa-solid fa-moon text-blue-600";
                 document.getElementById("theme-text").innerText = "DARK MODE";
             } else {
                 document.body.classList.remove("light");
-                document.getElementById("theme-icon").className = "fa-solid fa-sun";
+                document.getElementById("theme-icon").className = "fa-solid fa-sun text-[#00e5ff]";
                 document.getElementById("theme-text").innerText = "LIGHT MODE";
             }
         }
         themeBtn.addEventListener("click", () => {
             const isLight = document.body.classList.contains("light");
             const newTheme = isLight ? "dark" : "light";
-            localStorage.setItem("theme_pref", newTheme);
+            localStorage.setItem("prime_pref", newTheme);
             applyTheme(newTheme);
         });
-        applyTheme(localStorage.getItem("theme_pref") || "dark");
+        applyTheme(localStorage.getItem("prime_pref") || "dark");
     </script>
 </body>
-</html>
-                                        
+    </html>
