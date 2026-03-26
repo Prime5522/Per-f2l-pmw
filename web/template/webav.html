@@ -113,6 +113,42 @@
 
 .custom-player-btns button:active { transform: scale(0.9); }
 
+        /* ব্রাইটনেস স্লাইডার পপ-আপ স্টাইল */
+#brightness-popup {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px 25px;
+    border-radius: 15px;
+    border: 1px solid #00e5ff;
+    z-index: 200;
+    display: none; /* শুরুতে লুকানো থাকবে */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+#brightness-popup span { font-size: 10px; font-weight: bold; color: #00e5ff; }
+
+/* স্লাইডার লুক */
+#br-slider {
+    -webkit-appearance: none;
+    width: 150px;
+    height: 4px;
+    background: #333;
+    border-radius: 5px;
+    outline: none;
+}
+
+#br-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px; height: 15px;
+    background: #00e5ff;
+    border-radius: 50%;
+    cursor: pointer;
+}
 /* ব্রাইটনেস ওভারলে (ভিডিওর ওপর কাজ করবে) */
 #brightness-overlay {
     position: absolute;
@@ -141,7 +177,7 @@
             <div><span class="text-pink-400">ᴘʀɪᴍᴇ</span> <span class="text-[#00e5ff]">ɴᴇᴛᴡᴏʀᴋ</span></div>
         </h1>
         <p class="text-[12px] text-gray-400 font-bold mt-1 anim-pulse uppercase tracking-widest">
-            <i class="fas fa-bolt"></i> ᴘʀɪᴍᴇ ꜱᴛʀᴇᴀᴍɪɴɢ ᴘʟᴀᴛꜰᴏʀᴍ
+            <i class="fas fa-bolt"></i> 𝐏𝐫𝐢𝐦𝐞 𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠 𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦
         </p>
     </header>
 
@@ -257,7 +293,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts Section -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         const fileUrl = "{{file_url}}";
@@ -281,22 +317,30 @@
                 ratio: '16:9'
             });
 
-            // ৩. প্লেয়ার রেডি হলে কাস্টম বাটন এবং ব্রাইটনেস লেয়ার ইনজেক্ট করা
+            // ৩. প্লেয়ার রেডি হলে কাস্টম ফিচার ইনজেক্ট করা
             player.on('ready', () => {
-                const container = player.elements.container; // প্লেয়ারের মেইন কন্টেইনার
+                const container = player.elements.container;
 
-                // ব্রাইটনেস লেয়ার তৈরি ও যোগ করা
+                // ৩.১ ব্রাইটনেস লেয়ার এবং পপ-আপ স্লাইডার তৈরি
                 const overlay = document.createElement('div');
                 overlay.id = 'brightness-overlay';
                 container.appendChild(overlay);
 
-                // ১০ সেকেন্ড স্কিপ এবং ব্রাইটনেস বাটন সেকশন তৈরি
+                const brPopup = document.createElement('div');
+                brPopup.id = 'brightness-popup';
+                brPopup.innerHTML = `
+                    <span>BRIGHTNESS</span>
+                    <input type="range" id="br-slider" min="0" max="0.8" step="0.05" value="0">
+                `;
+                container.appendChild(brPopup);
+
+                // ৩.২ ১০ সেকেন্ড বাটন এবং ব্রাইটনেস বাটন সেকশন তৈরি
                 const controls = container.querySelector('.plyr__controls');
                 const middleSection = document.createElement('div');
                 middleSection.className = 'custom-player-btns';
                 middleSection.innerHTML = `
                     <button id="custom-rewind" title="Rewind 10s"><i class="fas fa-backward"></i></button>
-                    <button id="brightness-btn" title="Brightness"><i class="fas fa-sun"></i></button>
+                    <button id="br-toggle-btn" title="Brightness"><i class="fas fa-sun"></i></button>
                     <button id="custom-forward" title="Forward 10s"><i class="fas fa-forward"></i></button>
                 `;
 
@@ -304,16 +348,25 @@
                 const playBtn = controls.querySelector('[data-plyr="play"]');
                 if (playBtn) playBtn.after(middleSection);
 
-                // বাটনগুলোর কাজ (Click Events)
-                document.getElementById('custom-rewind').onclick = () => player.rewind(10);
-                document.getElementById('custom-forward').onclick = () => player.forward(10);
+                // ৩.৩ ক্লিক ইভেন্টগুলো সেট করা
+                document.getElementById('custom-rewind').onclick = (e) => { e.stopPropagation(); player.rewind(10); };
+                document.getElementById('custom-forward').onclick = (e) => { e.stopPropagation(); player.forward(10); };
 
-                let brightnessLevel = 0; // শুরুতে ০ মানে অরিজিনাল ব্রাইটনেস
-                document.getElementById('brightness-btn').onclick = () => {
-                    brightnessLevel += 0.2;
-                    if (brightnessLevel > 0.6) brightnessLevel = 0; // ৬০% এর পর আবার ১০০% আলো হবে
-                    document.getElementById('brightness-overlay').style.opacity = brightnessLevel;
+                // ব্রাইটনেস স্লাইডার টগল করা
+                const btn = document.getElementById('br-toggle-btn');
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    brPopup.style.display = (brPopup.style.display === 'flex') ? 'none' : 'flex';
                 };
+
+                // স্লাইডার টেনে ব্রাইটনেস অ্যাডজাস্ট করা
+                document.getElementById('br-slider').oninput = (e) => {
+                    document.getElementById('brightness-overlay').style.opacity = e.target.value;
+                };
+
+                // পপ-আপের বাইরে বা ভিডিওতে ক্লিক করলে স্লাইডার বন্ধ হবে
+                window.addEventListener('click', () => { brPopup.style.display = 'none'; });
+                brPopup.onclick = (e) => e.stopPropagation();
                 
                 // সাউন্ড ফিক্স
                 player.volume = 1;
@@ -323,9 +376,22 @@
             player.on('play', () => { player.muted = false; });
         });
 
-        function watchOnline() { if (player) { player.play(); player.fullscreen.enter(); } }
+        // ৪. ওয়াচ অনলাইন ও অটো-রোটেট লজিক
+        function watchOnline() { 
+            if (player) { 
+                player.play(); 
+                player.fullscreen.enter(); 
+                
+                // অটো-রোটেট করার চেষ্টা (Landscape Mode)
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(err => {
+                        console.log("Orientation lock blocked: ", err);
+                    });
+                }
+            } 
+        }
 
-        // ফিক্সড ডাউনলোড ফাংশন
+        // ৫. ফিক্সড ডাউনলোড ফাংশন
         function streamDownload() {
             const a = document.createElement('a');
             a.href = getCleanUrl();
@@ -335,64 +401,32 @@
             document.body.removeChild(a);
         }
 
-        // --- ৪. এক্সটার্নাল প্লেয়ার ইন্টেন্ট লজিক (ক্লিন ভার্সন) ---
-        function mx_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.mxtech.videoplayer.ad;end`;
-        }
-
-        function vlc_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.videolan.vlc;end`;
-        }
-
-        function playit_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.playit.videoplayer;end`;
-        }
-
+        // --- ৬. এক্সটার্নাল প্লেয়ার ইন্টেন্ট লজিক (সব ফিক্সড) ---
+        function mx_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.mxtech.videoplayer.ad;end`; }
+        function vlc_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.videolan.vlc;end`; }
+        function playit_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.playit.videoplayer;end`; }
         function n_player() {
-            if (/Android/i.test(navigator.userAgent)) {
-                window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.newin.nplayer.pro;end`;
-            } else {
-                window.location.href = `nplayer-${getCleanUrl()}`;
-            }
+            if (/Android/i.test(navigator.userAgent)) { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.newin.nplayer.pro;end`; }
+            else { window.location.href = `nplayer-${getCleanUrl()}`; }
         }
+        function system_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;end`; }
+        function km_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.kmplayer;end`; }
+        function kodi_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.xbmc.kodi;end`; }
 
-        function system_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
-        }
-
-        function km_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.kmplayer;end`;
-        }
-
-        function kodi_player() {
-            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.xbmc.kodi;end`;
-        }
-
-        // ৫. ঘড়ি আপডেট
-        function updateClock() {
-            document.getElementById('clock').textContent = new Date().toLocaleTimeString();
-        }
+        // ৭. ইউটিলিটি ফাংশন (ঘড়ি, কপি, মোডাল)
+        function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
         setInterval(updateClock, 1000); updateClock();
 
-        // ৬. কপি টু ক্লিপবোর্ড
-        function copyToClipboard() {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!"));
-        }
+        function copyToClipboard() { navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!")); }
 
-        // ৭. ড্যামকা মোডাল কন্ট্রোল
-        function openModal() {
-            const modal = document.getElementById('infoModal');
-            const modalBox = document.getElementById('modalBox');
-            modal.classList.remove('hidden'); 
-            modal.classList.add('flex');
-            setTimeout(() => modalBox.classList.add('modal-active-anim'), 10);
+        function openModal() { 
+            const m = document.getElementById('infoModal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            setTimeout(() => document.getElementById('modalBox').classList.add('modal-active-anim'), 10);
         }
-
-        function closeModal() {
-            const modal = document.getElementById('infoModal');
-            const modalBox = document.getElementById('modalBox');
-            modalBox.classList.remove('modal-active-anim');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 400);
+        function closeModal() { 
+            document.getElementById('modalBox').classList.remove('modal-active-anim');
+            setTimeout(() => { document.getElementById('infoModal').classList.add('hidden'); }, 400);
         }
 
         // ৮. ডার্ক/লাইট থিম টগল
@@ -415,6 +449,6 @@
             applyTheme(newTheme);
         });
         applyTheme(localStorage.getItem("prime_pref") || "dark");
-    </script>  
+    </script>    
 </body>
                                                      </html>
