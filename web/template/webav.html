@@ -1,4 +1,4 @@
-
+--- START OF FILE webav (5).html ---
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,8 +85,8 @@
         .anim-float-slow { animation: float-slow 3s infinite ease-in-out; }
 
         @keyframes reveal-light {
-            0% { opacity: 0; transform: scale(0.85) translateY(20px); filter: blur(10px) brightness(1.5); box-shadow: 0 0 0 rgba(0, 229, 255, 0); }
-            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px) brightness(1); box-shadow: 0 15px 50px rgba(0,0,0,0.6); }
+            0% { opacity: 0; transform: scale(0.85) translateY(20px); filter: blur(10px) brightness(1.5); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px) brightness(1); }
         }
         .modal-active-anim { animation: reveal-light 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
@@ -235,12 +235,12 @@
         </button>
     </div>
 
-    <!-- Modal (Original Design Restored) -->
+    <!-- Modal (Original Restored) -->
     <div id="infoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div id="modalBox" class="bg-cardDark border border-[#1f2937] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl opacity-0">
             <div class="p-4 border-b border-[#1f2937] flex justify-between items-center bg-[#121824]/80 backdrop-blur-md">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2 font-tech">
-                    <i class="fas fa-circle-info text-[#00e5ff] drop-shadow-[0_0_5px_rgba(0,229,255,0.8)]"></i> Bot Information
+                    <i class="fas fa-circle-info text-[#00e5ff]"></i> Bot Information
                 </h3>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500 transition-all">
                     <i class="fas fa-times text-xl"></i>
@@ -248,7 +248,7 @@
             </div>
 
             <div class="p-5 overflow-y-auto space-y-4 text-sm bg-bgMain">
-                <div class="bg-gray-800/40 border border-yellow-500/30 rounded-xl p-4 relative overflow-hidden group">
+                <div class="bg-gray-800/40 border border-yellow-500/30 rounded-xl p-4 relative">
                     <h4 class="text-yellow-500 font-bold text-base mb-2 font-tech flex items-center gap-2">
                         <i class="fas fa-file-contract"></i> Disclaimer & DMCA
                     </h4>
@@ -257,7 +257,7 @@
                     </p>
                 </div>
 
-                <div class="bg-gray-800/40 border border-blue-500/30 rounded-xl p-4 relative overflow-hidden group">
+                <div class="bg-gray-800/40 border border-blue-500/30 rounded-xl p-4 relative">
                     <h4 class="text-blue-400 font-bold text-base mb-2 font-tech flex items-center gap-2">
                         <i class="fas fa-bullhorn"></i> Bot Updates
                     </h4>
@@ -269,7 +269,7 @@
                     </a>
                 </div>
 
-                <div class="bg-gray-800/40 border border-rose-500/30 rounded-xl p-4 relative overflow-hidden group">
+                <div class="bg-gray-800/40 border border-rose-500/30 rounded-xl p-4 relative">
                     <h4 class="text-rose-400 font-bold text-base mb-2 font-tech flex items-center gap-2">
                         <i class="fas fa-headset"></i> Contact Support
                     </h4>
@@ -301,42 +301,38 @@
             if (player) { player.play(); player.fullscreen.enter(); }
         }
 
-        // --- EXTERNAL PLAYERS (SMART FIX) ---
+        // --- EXTERNAL PLAYERS (SPELLING FIXED) ---
         function mx_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/*;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};end`;
+            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};end`;
         }
 
         function vlc_player() {
-            // VLC has its own direct protocol which is more stable
-            window.location.href = `vlc://${fileUrl}`;
+            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.videolan.vlc;S.title=${encodeURIComponent(fileName)};end`;
+        }
+
+        function playit_player() {
+            // PlayIt (Spelling Fixed)
+            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.gravity.videoplayer;S.title=${encodeURIComponent(fileName)};end`;
         }
 
         function n_player() {
+            // nPlayer supports this direct URL scheme
             window.location.href = `nplayer-${fileUrl}`;
         }
 
         function km_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/*;package=com.kmplayer;end`;
-        }
-
-        function playit_player() {
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=http;type=video/*;package=com.gravity.videoplayer;end`;
+            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.kmplayer;end`;
         }
 
         function kodi_player() {
-            // Kodi doesn't have a standard package intent that works everywhere, but this is the best attempt
-            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
+            window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.xbmc.kodi;end`;
         }
 
         function system_player() {
-            // It will ask the user which player to use
             window.location.href = `intent:${fileUrl}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
         }
 
-        // --- DOWNLOAD (STABLE) ---
-        function streamDownload() {
-            window.location.href = fileUrl;
-        }
+        function streamDownload() { window.location.href = fileUrl; }
 
         function updateClock() {
             const now = new Date();
@@ -348,7 +344,7 @@
             navigator.clipboard.writeText(window.location.href).then(() => alert("Link copied!"));
         }
 
-        // Modal Logic
+        // Modal Control
         const modal = document.getElementById('infoModal');
         const modalBox = document.getElementById('modalBox');
         function openModal() {
@@ -362,21 +358,17 @@
 
         // Theme Switch
         const themeBtn = document.getElementById("theme-toggle-btn");
-        const themeIcon = document.getElementById("theme-icon");
-        const themeText = document.getElementById("theme-text");
-
         function applyTheme(mode) {
             if (mode === "light") {
                 document.body.classList.add("light");
-                themeIcon.className = "fa-solid fa-moon";
-                themeText.innerText = "DARK MODE";
+                document.getElementById("theme-icon").className = "fa-solid fa-moon";
+                document.getElementById("theme-text").innerText = "DARK MODE";
             } else {
                 document.body.classList.remove("light");
-                themeIcon.className = "fa-solid fa-sun";
-                themeText.innerText = "LIGHT MODE";
+                document.getElementById("theme-icon").className = "fa-solid fa-sun";
+                document.getElementById("theme-text").innerText = "LIGHT MODE";
             }
         }
-
         themeBtn.addEventListener("click", () => {
             const isLight = document.body.classList.contains("light");
             const newTheme = isLight ? "dark" : "light";
@@ -387,3 +379,4 @@
     </script>
 </body>
 </html>
+                                        
