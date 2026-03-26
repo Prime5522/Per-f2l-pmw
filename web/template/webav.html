@@ -64,12 +64,43 @@
         .btn-hover { transition: all 0.3s ease; }
         .btn-hover:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
-        /* --- ৪. থিম টগল বাটন --- */
-        .theme-wrapper { position: fixed; top: 20px; right: 20px; z-index: 10000; }
-        .theme-btn {
-            background: var(--bg-card); border: 2px solid var(--border-accent);
-            padding: 8px 16px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800;
-        }
+        /* থিম বাটন ফিক্সড পজিশন */
+.theme-wrapper {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 10000; /* একদম সবার উপরে থাকবে */
+}
+
+.theme-btn {
+    background: var(--bg-card);
+    border: 2px solid var(--border-accent);
+    padding: 8px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-primary);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+}
+
+/* মোবাইলের জন্য স্মার্ট অ্যাডজাস্টমেন্ট: শুধু আইকন দেখাবে */
+@media (max-width: 480px) {
+    .theme-btn span {
+        display: none; /* মোবাইলে 'LIGHT MODE' লেখাটি লুকিয়ে ফেলবে */
+    }
+    .theme-btn {
+        padding: 10px; /* আইকনটিকে বড় এবং ক্লিকেবল রাখবে */
+    }
+    .theme-wrapper {
+        top: 10px;
+        right: 10px;
+    }
+}
 
         /* --- ৫. ভাসমান ড্যামকা ও ফিক্সড ফুটার --- */
         .fixed-copyright {
@@ -164,18 +195,18 @@
 
     <!-- Theme Toggle -->
     <div class="theme-wrapper">
-        <button id="theme-toggle-btn" class="theme-btn">
-            <i class="fa-solid fa-circle-half-stroke" id="theme-icon"></i>
-            <span id="theme-text">LIGHT MODE</span>
-        </button>
+    <button id="theme-toggle-btn" class="theme-btn">
+        <i class="fa-solid fa-circle-half-stroke" id="theme-icon"></i>
+        <span id="theme-text">LIGHT MODE</span>
+    </button>
     </div>
 
     <!-- Header Section -->
-    <header class="flex flex-col items-center pt-8 pb-4">
-        <h1 class="text-3xl font-extrabold flex items-center gap-3">
-            <i class="fas fa-clapperboard text-rose-600 anim-beat"></i>
-            <div><span class="text-pink-400">ᴘʀɪᴍᴇ</span> <span class="text-[#00e5ff]">ɴᴇᴛᴡᴏʀᴋ</span></div>
-        </h1>
+    <header class="flex flex-col items-center pt-14 pb-4"> <!-- pt-14 করা হয়েছে গ্যাপের জন্য -->
+    <h1 class="text-3xl md:text-4xl font-extrabold flex items-center gap-3">
+        <i class="fas fa-clapperboard text-rose-600 anim-beat"></i>
+        <div><span class="text-pink-400">ᴘʀɪᴍᴇ</span> <span class="text-[#00e5ff]">ɴᴇᴛᴡᴏʀᴋ</span></div>
+    </h1>
         <p class="text-[12px] text-gray-400 font-bold mt-1 anim-pulse uppercase tracking-widest">
             <i class="fas fa-bolt"></i> 𝐏𝐫𝐢𝐦𝐞 𝐒𝐭𝐫𝐞𝐚𝐦𝐢𝐧𝐠 𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦
         </p>
