@@ -328,14 +328,13 @@
 
                 const brPopup = document.createElement('div');
                 brPopup.id = 'brightness-popup';
-                // value="0.8" রাখা হয়েছে যাতে শুরুতে ১০০% ব্রাইটনেস থাকে (০.৮ মানে একদম স্বচ্ছ)
                 brPopup.innerHTML = `
                     <span>BRIGHTNESS</span>
                     <input type="range" id="br-slider" min="0" max="0.8" step="0.05" value="0.8">
                 `;
                 container.appendChild(brPopup);
 
-                // ২. ১০ সেকেন্ড বাটন এবং ব্রাইটনেস বাটন সেকশন তৈরি
+                // ২. ১০ সেকেন্ড বাটন এবং ব্রাইটনেস বাটন সেকশন তৈরি (বামে Rewind, ডানে Forward)
                 const controls = container.querySelector('.plyr__controls');
                 const middleSection = document.createElement('div');
                 middleSection.className = 'custom-player-btns';
@@ -348,14 +347,17 @@
                 const playBtn = controls.querySelector('[data-plyr="play"]');
                 if (playBtn) playBtn.after(middleSection);
 
-                // ৩. বাটনগুলোর কাজ ঠিক করা (Fixed Rewind/Forward)
+                // ৩. ১০ সেকেন্ড আগে-পিছে যাওয়ার ম্যানুয়াল লজিক (১০০% ফিক্সড)
                 document.getElementById('custom-rewind').onclick = (e) => { 
                     e.stopPropagation(); 
-                    player.currentTime -= 10; // ১০ সেকেন্ড পেছনে যাবে
+                    // বর্তমান সময় থেকে ১০ সেকেন্ড কমিয়ে দেওয়া (পেছনে যাবে)
+                    player.currentTime = Math.max(0, player.currentTime - 10); 
                 };
+                
                 document.getElementById('custom-forward').onclick = (e) => { 
                     e.stopPropagation(); 
-                    player.currentTime += 10; // ১০ সেকেন্ড সামনে যাবে
+                    // বর্তমান সময়ের সাথে ১০ সেকেন্ড যোগ করা (সামনে যাবে)
+                    player.currentTime = Math.min(player.duration, player.currentTime + 10); 
                 };
 
                 // ৪. ব্রাইটনেস স্লাইডার টগল করা
@@ -365,10 +367,9 @@
                     brPopup.style.display = (brPopup.style.display === 'flex') ? 'none' : 'flex';
                 };
 
-                // ৫. ব্রাইটনেস ফিক্সড লজিক: ডানে টানলে বাড়বে (Opacity কমবে), বামে টানলে কমবে (Opacity বাড়বে)
+                // ৫. ব্রাইটনেস ফিক্সড লজিক
                 document.getElementById('br-slider').oninput = (e) => {
                     const val = parseFloat(e.target.value);
-                    // ০.৮ থেকে স্লাইডার ভ্যালু বিয়োগ করলে পর্দা অন্ধকার বা পরিষ্কার হবে
                     document.getElementById('brightness-overlay').style.opacity = (0.8 - val);
                 };
 
@@ -378,7 +379,6 @@
                 player.volume = 1;
                 player.muted = false;
             });
-
             player.on('play', () => { player.muted = false; });
         });
 
