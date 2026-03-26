@@ -321,20 +321,21 @@
             player.on('ready', () => {
                 const container = player.elements.container;
 
-                // ৩.১ ব্রাইটনেস লেয়ার এবং পপ-আপ স্লাইডার তৈরি
+                // ১. ব্রাইটনেস লেয়ার এবং পপ-আপ স্লাইডার তৈরি
                 const overlay = document.createElement('div');
                 overlay.id = 'brightness-overlay';
                 container.appendChild(overlay);
 
                 const brPopup = document.createElement('div');
                 brPopup.id = 'brightness-popup';
+                // value="0.8" রাখা হয়েছে যাতে শুরুতে ১০০% ব্রাইটনেস থাকে (০.৮ মানে একদম স্বচ্ছ)
                 brPopup.innerHTML = `
                     <span>BRIGHTNESS</span>
-                    <input type="range" id="br-slider" min="0" max="0.8" step="0.05" value="0">
+                    <input type="range" id="br-slider" min="0" max="0.8" step="0.05" value="0.8">
                 `;
                 container.appendChild(brPopup);
 
-                // ৩.২ ১০ সেকেন্ড বাটন এবং ব্রাইটনেস বাটন সেকশন তৈরি
+                // ২. ১০ সেকেন্ড বাটন এবং ব্রাইটনেস বাটন সেকশন তৈরি
                 const controls = container.querySelector('.plyr__controls');
                 const middleSection = document.createElement('div');
                 middleSection.className = 'custom-player-btns';
@@ -344,31 +345,36 @@
                     <button id="custom-forward" title="Forward 10s"><i class="fas fa-forward"></i></button>
                 `;
 
-                // প্লে বাটনের ঠিক পরেই নতুন বাটনগুলো বসানো
                 const playBtn = controls.querySelector('[data-plyr="play"]');
                 if (playBtn) playBtn.after(middleSection);
 
-                // ৩.৩ ক্লিক ইভেন্টগুলো সেট করা
-                document.getElementById('custom-rewind').onclick = (e) => { e.stopPropagation(); player.rewind(10); };
-                document.getElementById('custom-forward').onclick = (e) => { e.stopPropagation(); player.forward(10); };
+                // ৩. বাটনগুলোর কাজ ঠিক করা (Fixed Rewind/Forward)
+                document.getElementById('custom-rewind').onclick = (e) => { 
+                    e.stopPropagation(); 
+                    player.currentTime -= 10; // ১০ সেকেন্ড পেছনে যাবে
+                };
+                document.getElementById('custom-forward').onclick = (e) => { 
+                    e.stopPropagation(); 
+                    player.currentTime += 10; // ১০ সেকেন্ড সামনে যাবে
+                };
 
-                // ব্রাইটনেস স্লাইডার টগল করা
+                // ৪. ব্রাইটনেস স্লাইডার টগল করা
                 const btn = document.getElementById('br-toggle-btn');
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     brPopup.style.display = (brPopup.style.display === 'flex') ? 'none' : 'flex';
                 };
 
-                // স্লাইডার টেনে ব্রাইটনেস অ্যাডজাস্ট করা
+                // ৫. ব্রাইটনেস ফিক্সড লজিক: ডানে টানলে বাড়বে (Opacity কমবে), বামে টানলে কমবে (Opacity বাড়বে)
                 document.getElementById('br-slider').oninput = (e) => {
-                    document.getElementById('brightness-overlay').style.opacity = e.target.value;
+                    const val = parseFloat(e.target.value);
+                    // ০.৮ থেকে স্লাইডার ভ্যালু বিয়োগ করলে পর্দা অন্ধকার বা পরিষ্কার হবে
+                    document.getElementById('brightness-overlay').style.opacity = (0.8 - val);
                 };
 
-                // পপ-আপের বাইরে বা ভিডিওতে ক্লিক করলে স্লাইডার বন্ধ হবে
                 window.addEventListener('click', () => { brPopup.style.display = 'none'; });
                 brPopup.onclick = (e) => e.stopPropagation();
                 
-                // সাউন্ড ফিক্স
                 player.volume = 1;
                 player.muted = false;
             });
