@@ -263,6 +263,7 @@
         const fileUrl = "{{file_url}}";
         const fileName = "{{file_name}}";
 
+        // ১. ভিডিও ইউআরএল ক্লিন করা (ডাবল প্রোটোকল ফিক্স)
         function getCleanUrl() {
             let url = fileUrl.trim();
             if (url.startsWith("http:https://")) { url = url.replace("http:https://", "https://"); }
@@ -271,70 +272,130 @@
 
         let player;
         document.addEventListener('DOMContentLoaded', () => {
-    // ১. ভিডিওর ওপর ব্রাইটনেস লেয়ার তৈরি (যদি না থাকে)
-    const playerContainer = document.querySelector('.plyr');
-    const overlay = document.createElement('div');
-    overlay.id = 'brightness-overlay';
-    playerContainer.appendChild(overlay);
+            // ২. প্লেয়ার ইনিশিয়ালাইজ করা
+            player = new Plyr('#player', {
+                controls: [
+                    'play-large', 'play', 'progress', 'current-time', 
+                    'mute', 'volume', 'settings', 'fullscreen'
+                ],
+                ratio: '16:9'
+            });
 
-    player = new Plyr('#player', {
-        controls: [
-            'play-large', 'play', 
-            // মাঝখানের ফাঁকা জায়গায় আমরা বাটনগুলো ইনজেক্ট করব (নিচে দেখুন)
-            'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'
-        ],
-        ratio: '16:9'
-    });
+            // ৩. প্লেয়ার রেডি হলে কাস্টম বাটন এবং ব্রাইটনেস লেয়ার ইনজেক্ট করা
+            player.on('ready', () => {
+                const container = player.elements.container; // প্লেয়ারের মেইন কন্টেইনার
 
-    // ২. প্লেয়ার কন্ট্রোলের মাঝখানে বাটনগুলো যোগ করা
-    const controls = document.querySelector('.plyr__controls');
-    const middleSection = document.createElement('div');
-    middleSection.className = 'custom-player-btns';
-    middleSection.innerHTML = `
-        <button onclick="player.rewind(10)" title="Rewind 10s"><i class="fas fa-backward"></i></button>
-        <button id="brightness-btn" title="Brightness"><i class="fas fa-sun"></i></button>
-        <button onclick="player.forward(10)" title="Forward 10s"><i class="fas fa-forward"></i></button>
-    `;
-    
-    // প্লে বাটনের পরেই এই সেকশনটি বসবে
-    const playBtn = controls.querySelector('[data-plyr="play"]');
-    playBtn.after(middleSection);
+                // ব্রাইটনেস লেয়ার তৈরি ও যোগ করা
+                const overlay = document.createElement('div');
+                overlay.id = 'brightness-overlay';
+                container.appendChild(overlay);
 
-    // ৩. ব্রাইটনেস কন্ট্রোল লজিক (সিম্পল টগল)
-    let brightnessLevel = 0; 
-    document.getElementById('brightness-btn').addEventListener('click', () => {
-        brightnessLevel = (brightnessLevel + 0.2) % 0.8; // ০ থেকে ০.৬ পর্যন্ত ঘুরবে
-        document.getElementById('brightness-overlay').style.opacity = brightnessLevel;
-    });
-});
+                // ১০ সেকেন্ড স্কিপ এবং ব্রাইটনেস বাটন সেকশন তৈরি
+                const controls = container.querySelector('.plyr__controls');
+                const middleSection = document.createElement('div');
+                middleSection.className = 'custom-player-btns';
+                middleSection.innerHTML = `
+                    <button id="custom-rewind" title="Rewind 10s"><i class="fas fa-backward"></i></button>
+                    <button id="brightness-btn" title="Brightness"><i class="fas fa-sun"></i></button>
+                    <button id="custom-forward" title="Forward 10s"><i class="fas fa-forward"></i></button>
+                `;
+
+                // প্লে বাটনের ঠিক পরেই নতুন বাটনগুলো বসানো
+                const playBtn = controls.querySelector('[data-plyr="play"]');
+                if (playBtn) playBtn.after(middleSection);
+
+                // বাটনগুলোর কাজ (Click Events)
+                document.getElementById('custom-rewind').onclick = () => player.rewind(10);
+                document.getElementById('custom-forward').onclick = () => player.forward(10);
+
+                let brightnessLevel = 0; // শুরুতে ০ মানে অরিজিনাল ব্রাইটনেস
+                document.getElementById('brightness-btn').onclick = () => {
+                    brightnessLevel += 0.2;
+                    if (brightnessLevel > 0.6) brightnessLevel = 0; // ৬০% এর পর আবার ১০০% আলো হবে
+                    document.getElementById('brightness-overlay').style.opacity = brightnessLevel;
+                };
+                
+                // সাউন্ড ফিক্স
+                player.volume = 1;
+                player.muted = false;
+            });
+
+            player.on('play', () => { player.muted = false; });
+        });
 
         function watchOnline() { if (player) { player.play(); player.fullscreen.enter(); } }
+
+        // ফিক্সড ডাউনলোড ফাংশন
         function streamDownload() {
-            const a = document.createElement('a'); a.href = getCleanUrl(); a.download = fileName;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            const a = document.createElement('a');
+            a.href = getCleanUrl();
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
-        // --- প্লেয়ার ইন্টেন্ট লজিক ---
-        function mx_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.mxtech.videoplayer.ad;end`; }
-        function vlc_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.videolan.vlc;end`; }
-        function playit_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.playit.videoplayer;end`; }
+        // --- ৪. এক্সটার্নাল প্লেয়ার ইন্টেন্ট লজিক (ক্লিন ভার্সন) ---
+        function mx_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.mxtech.videoplayer.ad;end`;
+        }
+
+        function vlc_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.videolan.vlc;end`;
+        }
+
+        function playit_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.playit.videoplayer;end`;
+        }
+
         function n_player() {
-            if (/Android/i.test(navigator.userAgent)) { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.newin.nplayer.pro;end`; }
-            else { window.location.href = `nplayer-${getCleanUrl()}`; }
+            if (/Android/i.test(navigator.userAgent)) {
+                window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.newin.nplayer.pro;end`;
+            } else {
+                window.location.href = `nplayer-${getCleanUrl()}`;
+            }
         }
-        function system_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;end`; }
-        function km_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.kmplayer;end`; }
-        function kodi_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.xbmc.kodi;end`; }
 
-        function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
+        function system_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
+        }
+
+        function km_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.kmplayer;end`;
+        }
+
+        function kodi_player() {
+            window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.xbmc.kodi;end`;
+        }
+
+        // ৫. ঘড়ি আপডেট
+        function updateClock() {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+        }
         setInterval(updateClock, 1000); updateClock();
 
-        function copyToClipboard() { navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!")); }
+        // ৬. কপি টু ক্লিপবোর্ড
+        function copyToClipboard() {
+            navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!"));
+        }
 
-        function openModal() { document.getElementById('infoModal').classList.remove('hidden'); document.getElementById('infoModal').classList.add('flex'); }
-        function closeModal() { document.getElementById('infoModal').classList.add('hidden'); document.getElementById('infoModal').classList.remove('flex'); }
+        // ৭. ড্যামকা মোডাল কন্ট্রোল
+        function openModal() {
+            const modal = document.getElementById('infoModal');
+            const modalBox = document.getElementById('modalBox');
+            modal.classList.remove('hidden'); 
+            modal.classList.add('flex');
+            setTimeout(() => modalBox.classList.add('modal-active-anim'), 10);
+        }
 
-        // --- থিম টগল ---
+        function closeModal() {
+            const modal = document.getElementById('infoModal');
+            const modalBox = document.getElementById('modalBox');
+            modalBox.classList.remove('modal-active-anim');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 400);
+        }
+
+        // ৮. ডার্ক/লাইট থিম টগল
         const themeBtn = document.getElementById("theme-toggle-btn");
         function applyTheme(mode) {
             if (mode === "light") {
@@ -354,6 +415,6 @@
             applyTheme(newTheme);
         });
         applyTheme(localStorage.getItem("prime_pref") || "dark");
-    </script>
+    </script>  
 </body>
                                                      </html>
