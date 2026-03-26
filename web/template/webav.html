@@ -1,3 +1,4 @@
+--- START OF FILE webav (5).html ---
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,46 +16,43 @@
     
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 
-                        tech: ['Chakra Petch', 'sans-serif'],
-                        body: ['Poppins', 'sans-serif'] 
-                    },
-                    colors: {
-                        bgMain: '#0b0f15',
-                        cardDark: '#121824',
-                        btnDark: '#1a2232',
-                    }
-                }
-            }
-        }
-    </script>
     
     <style>
-        /* --- Video Player Fixes (Bigger Progress Bar & Sound) --- */
+        /* --- ১. থিম ভেরিয়েবলস (Dark/Light) --- */
         :root {
-    --plyr-range-track-height: 10px; /* স্লাইডার বার মোটা করা */
-    --plyr-range-thumb-height: 20px; /* গোল বিন্দু বড় করা */
-}
-.plyr__progress__container { height: 15px; }
-        /* Sound/Control spacing */
-        .plyr--full-ui input[type=range] { color: #00e5ff; }
-        .plyr__control--overlaid { background: rgba(0, 229, 255, 0.8); }
-
-        body { 
-            background-color: #0b0f15; 
-            color: white; 
-            font-family: 'Poppins', sans-serif;
-            background-image: radial-gradient(circle at right center, rgba(0, 229, 255, 0.05), transparent 50%);
+            --bg-body: #0b0f15;
+            --bg-card: #121824;
+            --bg-btn: #1a2232;
+            --text-primary: #ffffff;
+            --border-accent: #00e5ff;
+        }
+        body.light {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-btn: #e2e8f0;
+            --text-primary: #1e293b;
+            --border-accent: #2563eb;
         }
 
-        /* --- Original Animations --- */
+        /* --- ২. ফুল-উইডথ চিকন প্রগ্রেস বার (Micro-Seeking) --- */
+        :root {
+            --plyr-color-main: var(--border-accent);
+            --plyr-range-track-height: 4px; 
+            --plyr-range-thumb-height: 14px; 
+        }
+        .plyr__progress {
+            left: 0 !important; right: 0 !important; bottom: 0 !important;
+            position: absolute !important; width: 100% !important; padding: 0 !important; margin: 0 !important; z-index: 10;
+        }
+        .plyr--video .plyr__controls { padding-bottom: 15px !important; }
+
+        body { 
+            background-color: var(--bg-body) !important; color: var(--text-primary) !important; 
+            font-family: 'Poppins', sans-serif; transition: all 0.4s ease;
+        }
+
+        /* --- ৩. সব অরিজিনাল এনিমেশনস --- */
         @keyframes bounce-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         @keyframes pulse-icon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         @keyframes wiggle-icon { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
@@ -66,81 +64,33 @@
         .anim-beat { animation: beat-icon 2.5s infinite ease-in-out; }
 
         .btn-hover { transition: all 0.3s ease; }
-        .btn-hover:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-hover:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
-        /* --- DMCA Premium Button --- */
-        @keyframes dmca-color-shift {
-            0%, 100% { background-color: #00e5ff; color: #000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
-            50% { background-color: #2563eb; color: #fff; box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); }
-        }
-        .dmca-color-shift { animation: dmca-color-shift 4s infinite ease-in-out; }
-
-        @keyframes shine-sweep { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-        .shine-effect {
-            position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
-            transform: skewX(-20deg); animation: shine-sweep 3s infinite; pointer-events: none;
-        }
-
-        /* Modal Popup Reveal */
-        @keyframes reveal-light {
-            0% { opacity: 0; transform: scale(0.85) translateY(20px); filter: blur(10px) brightness(1.5); }
-            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px) brightness(1); }
-        }
-        .modal-active-anim { animation: reveal-light 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #121824; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
-
-        .plyr { width: 100%; border-radius: 0; }
-        .plyr video { object-fit: contain !important; width: 100%; height: 100%; }
-
-        /* Theme Switcher Styles */
-        :root { --bg-body: #0b0f15; --bg-card: #121824; --text-primary: #ffffff; --border-accent: #00e5ff; }
-        body.light { --bg-body: #f1f5f9; --bg-card: #ffffff; --text-primary: #1e293b; --border-accent: #2563eb; }
-        body { background-color: var(--bg-body) !important; color: var(--text-primary) !important; transition: all 0.4s ease; }
-        .bg-cardDark, .bg-bgMain { background-color: var(--bg-card) !important; }
-        
+        /* --- ৪. থিম টগল বাটন --- */
         .theme-wrapper { position: fixed; top: 20px; right: 20px; z-index: 10000; }
         .theme-btn {
             background: var(--bg-card); border: 2px solid var(--border-accent);
-            padding: 8px 16px; border-radius: 50px; cursor: pointer;
-            display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700;
+            padding: 8px 16px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800;
         }
-        @media (max-width: 480px) { .theme-btn span { display: none; } }
-        
-@keyframes float-dmca {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-.dmca-floating {
-    position: fixed;
-    bottom: 50px; /* কপিরাইট টেক্সটের উপরে থাকবে */
-    right: 20px;
-    z-index: 100;
-    animation: float-dmca 3s infinite ease-in-out;
-}
 
-/* --- কপিরাইট টেক্সট একদম নিচে ফিক্সড --- */
-.fixed-copyright {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(11, 15, 21, 0.9);
-    backdrop-filter: blur(5px);
-    text-align: center;
-    padding: 8px 0;
-    font-size: 11px;
-    font-weight: bold;
-    color: #9ca3af;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 101;
-            }
+        /* --- ৫. ভাসমান ড্যামকা ও ফিক্সড ফুটার --- */
+        .fixed-copyright {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-body); 
+            backdrop-filter: blur(10px); text-align: center; padding: 10px 0; font-size: 11px; font-weight: bold;
+            border-top: 1px solid rgba(128, 128, 128, 0.2); z-index: 1000;
+        }
+        .dmca-floating { position: fixed; bottom: 65px; right: 20px; z-index: 999; }
+        @keyframes dmca-color {
+            0%, 100% { background-color: #00e5ff; color: #000; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5); }
+            50% { background-color: #2563eb; color: #fff; box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); }
+        }
+        .dmca-btn { animation: dmca-color 4s infinite ease-in-out; }
+
+        .bg-card-theme { background-color: var(--bg-card) !important; border-color: rgba(128, 128, 128, 0.2) !important; }
+        .bg-btn-theme { background-color: var(--bg-btn) !important; border-color: rgba(128, 128, 128, 0.2) !important; }
     </style>
 </head>
-<body class="antialiased pb-24 relative min-h-screen">
+<body class="antialiased pb-32">
 
     <!-- Theme Toggle -->
     <div class="theme-wrapper">
@@ -151,128 +101,123 @@
     </div>
 
     <!-- Header Section -->
-    <header class="flex flex-col items-center justify-center pt-8 pb-4">
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight flex items-center gap-3">
-            <i class="fas fa-clapperboard text-rose-600 anim-beat text-2xl md:text-3xl"></i>
+    <header class="flex flex-col items-center pt-8 pb-4">
+        <h1 class="text-3xl font-extrabold flex items-center gap-3">
+            <i class="fas fa-clapperboard text-rose-600 anim-beat"></i>
             <div><span class="text-pink-400">ᴘʀɪᴍᴇ</span> <span class="text-[#00e5ff]">ɴᴇᴛᴡᴏʀᴋ</span></div>
         </h1>
-        <p class="text-[13px] text-gray-300 flex items-center gap-1.5 mt-1 font-bold">
-            <i class="fas fa-bolt text-gray-300 anim-pulse"></i> ᴘʀɪᴍᴇ ꜱᴛʀᴇᴀᴍɪɴɢ ᴘʟᴀᴛꜰᴏʀᴍ
+        <p class="text-[12px] text-gray-400 font-bold mt-1 anim-pulse uppercase tracking-widest">
+            <i class="fas fa-bolt"></i> ᴘʀɪᴍᴇ ꜱᴛʀᴇᴀᴍɪɴɢ ᴘʟᴀᴛꜰᴏʀᴍ
         </p>
     </header>
 
     <!-- Main Container -->
     <main class="w-full max-w-[600px] mx-auto px-4 z-10 relative">
-        
-        <!-- Video Player Card -->
-        <div class="bg-[#121824] rounded-xl overflow-hidden border border-[#1f2937] shadow-xl mb-6 flex flex-col">
-            <div class="p-4 bg-[#121824] border-b border-[#1f2937]">
-                <h2 class="text-[#00e5ff] font-tech text-[16px] md:text-xl font-extrabold flex items-start gap-2.5">
-                    <i class="fas fa-play-circle mt-1 text-[#00e5ff] anim-pulse"></i>
-                    <span class="break-words tracking-wide text-white">{{file_name}}</span>
+        <div class="bg-card-theme rounded-xl overflow-hidden border shadow-2xl mb-6 flex flex-col relative">
+            <div class="p-4 border-b bg-card-theme">
+                <h2 class="text-[#00e5ff] text-[15px] font-bold flex items-start gap-2">
+                    <i class="fas fa-play-circle mt-1 anim-pulse"></i> {{file_name}}
                 </h2>
             </div>
 
-            <!-- Player -->
-            <div class="relative w-full aspect-video bg-black">
+            <!-- Video Player -->
+            <div class="relative w-full aspect-video bg-black overflow-hidden">
                 <video id="player" playsinline controls preload="auto">
                     <source src="{{file_url}}" type="video/mp4" />
                 </video>
             </div>
 
-            <!-- File Info -->
-            <div class="flex justify-between items-center p-3 px-5 text-[13px] font-semibold bg-[#121824] border-t border-[#1f2937]">
-                <div class="text-gray-200"><span class="text-[#4ade80]">Size:</span> {{file_size}}</div>
-                <div class="text-gray-200"><span class="text-[#4ade80] anim-pulse">Time:</span> <span id="clock"></span></div>
-            </div>
+            <!-- File Info সেকশনটি এভাবে পরিবর্তন করুন -->
+<div class="flex justify-between p-3 px-5 text-[12px] font-black tracking-widest bg-card-theme">
+    <div class="text-green-500">SIZE: {{file_size}}</div>
+    <div class="text-green-500">TIME: <span id="clock">00:00:00</span></div>
+</div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="space-y-4 mb-8">
+        <!-- Buttons Section -->
+        <div class="space-y-4">
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="streamDownload()" class="btn-hover bg-[#e11d48] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fas fa-bolt anim-bounce text-yellow-300"></i> Fast Download
+                <button onclick="streamDownload()" class="btn-hover bg-[#e11d48] text-white rounded-full py-2.5 font-bold text-sm shadow-lg">
+                    <i class="fas fa-bolt anim-bounce text-yellow-300 mr-1"></i> DOWNLOAD
                 </button>
-                <button onclick="watchOnline()" class="btn-hover bg-[#2563eb] text-white rounded-full py-3 text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fas fa-folder-open anim-wiggle"></i> Watch Online
+                <button onclick="watchOnline()" class="btn-hover bg-[#2563eb] text-white rounded-full py-2.5 font-bold text-sm shadow-lg">
+                    <i class="fas fa-folder-open anim-wiggle mr-1"></i> WATCH ONLINE
                 </button>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="vlc_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-video anim-beat text-orange-500"></i> VLC
+                <button onclick="vlc_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[12px] font-bold">
+                    <i class="fas fa-video anim-beat text-orange-500 mr-1"></i> VLC PLAYER
                 </button>
-                <button onclick="mx_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-play anim-pulse text-blue-400"></i> MX Player
+                <button onclick="mx_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[12px] font-bold">
+                    <i class="fas fa-play anim-pulse text-blue-400 mr-1"></i> MX PLAYER
                 </button>
             </div>
             
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="playit_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-play-circle anim-beat text-green-500"></i> PlayIt
+                <button onclick="playit_player()" class="btn-hover bg-btn-theme border text-green-400 rounded-full py-2 text-[12px] font-bold">
+                    <i class="fas fa-play-circle anim-beat mr-1"></i> PLAYIT
                 </button>
-                <button onclick="system_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2.5 text-[13px] font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-desktop anim-pulse text-yellow-400"></i> System
+                <button onclick="system_player()" class="btn-hover bg-btn-theme border text-yellow-400 rounded-full py-2 text-[12px] font-bold">
+                    <i class="fas fa-desktop anim-pulse mr-1"></i> SYSTEM
                 </button>
             </div>
 
             <div class="grid grid-cols-3 gap-2">
-                <button onclick="km_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-film anim-bounce text-purple-400"></i> KMPlayer
+                <button onclick="km_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-film anim-bounce text-purple-400 mr-1"></i> KM PLAYER
                 </button>
-                <button onclick="kodi_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-border-all anim-pulse text-blue-300"></i> Kodi
+                <button onclick="kodi_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-border-all anim-pulse text-blue-300 mr-1"></i> KODI
                 </button>
-                <button onclick="n_player()" class="btn-hover bg-btnDark border border-gray-700 text-gray-200 rounded-full py-2 text-[11px] font-medium flex items-center justify-center gap-1.5">
-                    <i class="fas fa-mobile-screen anim-wiggle text-cyan-400"></i> nPlayer
-                </button>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 pt-2">
-                <a href="https://t.me/PrimeCineZone" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fas fa-paper-plane anim-bounce text-rose-700"></i> PRIME NETWORK™
-                </a>
-                <button onclick="copyToClipboard()" class="btn-hover bg-[#eab308] text-black rounded-xl py-3 text-[13px] font-bold flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fas fa-link anim-pulse"></i> Copy Link
+                <button onclick="n_player()" class="btn-hover bg-btn-theme border text-cyan-400 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-mobile-screen anim-wiggle mr-1"></i> NPLAYER
                 </button>
             </div>
         </div>
     </main>
 
-    <!-- ড্যাম-কা ভাসমান বাটন -->
-<div class="dmca-floating">
-    <button onclick="openModal()" class="dmca-color-shift rounded-full px-6 py-2.5 font-black text-[14px] flex items-center gap-2 border border-white/20 shadow-2xl">
-        <i class="fas fa-shield-halved"></i> DMCA
-    </button>
-</div>
+    <!-- ড্যামকা ভাসমান বাটন -->
+    <div class="dmca-floating">
+        <button onclick="openModal()" class="dmca-btn px-6 py-2 rounded-full font-black text-xs uppercase shadow-2xl border border-white/20">
+            <i class="fas fa-shield-halved anim-wiggle mr-1"></i> DMCA
+        </button>
+    </div>
 
-<!-- একদম নিচে ফিক্সড কপিরাইট টেক্সট -->
-<div class="fixed-copyright">
-    <i class="fas fa-shield-halved text-[#00e5ff] mr-1"></i>
-    © 2022-2026 <a href="https://t.me/PrimeXBots" class="text-[#00e5ff] underline">ᴘʀɪᴍᴇXʙᴏᴛꜱ</a> | ꜱᴇᴄᴜʀᴇ ʙʏ ᴘʀɪᴍᴇ ɴᴇᴛᴡᴏʀᴋ 🤝
-</div>
+    <!-- কপিরাইট ফুটার -->
+    <div class="fixed-copyright">
+        © 2022-2026 <a href="https://t.me/PrimeXBots" class="text-[#00e5ff] underline">ᴘʀɪᴍᴇXʙᴏᴛꜱ</a> | ꜱᴇᴄᴜʀᴇ ʙʏ ᴘʀɪᴍᴇ ɴᴇᴛᴡᴏʀᴋ 🤝
+    </div>
 
-    <!-- Modal (Original Design) -->
-    <div id="infoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div id="modalBox" class="bg-cardDark border border-[#1f2937] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl opacity-0">
-            <div class="p-4 border-b border-[#1f2937] flex justify-between items-center bg-[#121824]">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2 font-tech italic">
-                    <i class="fas fa-circle-info text-[#00e5ff]"></i> Bot Information
+    <!-- DMCA Modal (Restored Everything) -->
+    <div id="infoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
+        <div id="modalBox" class="bg-[#121824] border-2 border-[#1f2937] rounded-2xl w-full max-w-lg overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#121824]">
+                <h3 class="font-bold text-[#00e5ff] italic uppercase tracking-wider">
+                    <i class="fas fa-circle-info mr-2"></i> Bot Information
                 </h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500"><i class="fas fa-times text-xl"></i></button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-rose-500 text-2xl">&times;</button>
             </div>
-            <div class="p-5 overflow-y-auto space-y-4 text-sm bg-bgMain">
-                <div class="bg-gray-800/40 border border-yellow-500/30 rounded-xl p-4">
-                    <h4 class="text-yellow-500 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-file-contract"></i> Disclaimer & DMCA</h4>
-                    <p class="text-gray-400 leading-relaxed text-[13px]">ᴀʟʟ ꜰɪʟᴇꜱ, ʟɪɴᴋꜱ, ᴀɴᴅ ᴍᴇᴅɪᴀ ᴀᴄᴄᴇꜱꜱᴇᴅ ᴛʜʀᴏᴜɢʜ ᴛʜɪꜱ ʙᴏᴛ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ᴘᴜʙʟɪᴄʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ. ᴛʜɪꜱ ʙᴏᴛ ᴅᴏᴇꜱ ɴᴏᴛ ʜᴏꜱᴛ ᴏʀ ꜱᴛᴏʀᴇ ᴀɴʏ ꜰɪʟᴇꜱ ᴏɴ ɪᴛꜱ ᴏᴡɴ ꜱᴇʀᴠᴇʀꜱ.</p>
+            <div class="p-5 overflow-y-auto space-y-4 max-h-[70vh]">
+                <div class="bg-gray-800/40 border-l-4 border-yellow-500 p-4 rounded-r-xl">
+                    <h4 class="text-yellow-500 font-bold mb-1 uppercase text-xs">
+                        <i class="fas fa-file-contract mr-1"></i> Disclaimer & DMCA
+                    </h4>
+                    <p class="text-[12px] text-gray-400 leading-relaxed font-medium">ᴀʟʟ ꜰɪʟᴇꜱ, ʟɪɴᴋꜱ, ᴀɴᴅ ᴍᴇᴅɪᴀ ᴀᴄᴄᴇꜱꜱᴇᴅ ᴛʜʀᴏᴜɢʜ ᴛʜɪꜱ ʙᴏᴛ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ᴘᴜʙʟɪᴄʟʏ ᴀᴠᴀɪʟᴀʙʟᴇ ᴏɴ ᴛᴇʟᴇɢʀᴀᴍ. ᴛʜɪꜱ ʙᴏᴛ ᴅᴏᴇꜱ ɴᴏᴛ ʜᴏꜱᴛ ᴏʀ ꜱᴛᴏʀᴇ ᴀɴʏ ꜰɪʟᴇꜱ ᴏɴ ɪᴛꜱ ᴏᴡɴ ꜱᴇʀᴠᴇʀꜱ.</p>
                 </div>
-                <div class="bg-gray-800/40 border border-blue-500/30 rounded-xl p-4">
-                    <h4 class="text-blue-400 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-bullhorn"></i> Bot Updates</h4>
-                    <a href="https://t.me/PrimeXBots" target="_blank" class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-lg text-xs font-semibold">Join Channel <i class="fas fa-arrow-right"></i></a>
+                <div class="bg-gray-800/40 border-l-4 border-blue-500 p-4 rounded-r-xl">
+                    <h4 class="text-blue-400 font-bold mb-2 uppercase text-xs">
+                        <i class="fas fa-bullhorn mr-1"></i> Bot Updates
+                    </h4>
+                    <p class="text-[12px] text-gray-400 mb-3 font-medium">ꜱᴛᴀʏ ᴜᴘᴅᴀᴛᴇᴅ ᴡɪᴛʜ ᴛʜᴇ ʟᴀᴛᴇꜱᴛ ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛꜱ, ꜰɪxᴇꜱ, ᴀɴᴅ ɴᴇᴡ ʙᴏᴛ ʀᴇʟᴇᴀꜱᴇꜱ.</p>
+                    <a href="https://t.me/PrimeXBots" target="_blank" class="inline-flex bg-blue-500/20 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-blue-500/30">Join Channel <i class="fas fa-arrow-right ml-2"></i></a>
                 </div>
-                <div class="bg-gray-800/40 border border-rose-500/30 rounded-xl p-4">
-                    <h4 class="text-rose-400 font-bold mb-2 font-tech flex items-center gap-2"><i class="fas fa-headset"></i> Contact Support</h4>
-                    <a href="https://t.me/MR_PRIME_SUPREME" target="_blank" class="inline-flex items-center gap-2 bg-rose-500/10 text-rose-400 border border-rose-500/50 px-4 py-2 rounded-lg text-xs font-semibold">Contact Developer <i class="fas fa-paper-plane"></i></a>
+                <div class="bg-gray-800/40 border-l-4 border-rose-500 p-4 rounded-r-xl">
+                    <h4 class="text-rose-400 font-bold mb-2 uppercase text-xs">
+                        <i class="fas fa-headset mr-1"></i> Contact Support
+                    </h4>
+                    <p class="text-[12px] text-gray-400 mb-3 font-medium">ꜰᴏʀ Qᴜᴇʀɪᴇꜱ, ᴄᴏᴘʏʀɪɢʜᴛ ɪꜱꜱᴜᴇꜱ, ᴏʀ ᴛᴀᴋᴇᴅᴏᴡɴ ʀᴇQᴜᴇꜱᴛꜱ, ʀᴇᴀᴄʜ ᴏᴜᴛ ᴛᴏ ᴜꜱ.</p>
+                    <a href="https://t.me/MR_PRIME_SUPREME" target="_blank" class="inline-flex bg-rose-500/20 text-rose-400 border border-rose-500/50 px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-rose-500/30">Contact Developer <i class="fas fa-paper-plane ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -284,7 +229,6 @@
         const fileUrl = "{{file_url}}";
         const fileName = "{{file_name}}";
 
-        // URL Clean function for double protocol issues
         function getCleanUrl() {
             let url = fileUrl.trim();
             if (url.startsWith("http:https://")) { url = url.replace("http:https://", "https://"); }
@@ -297,77 +241,37 @@
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
                 ratio: '16:9'
             });
-            // Try unmuting sound
             player.on('ready', () => { player.volume = 1; player.muted = false; });
             player.on('play', () => { player.muted = false; });
         });
 
         function watchOnline() { if (player) { player.play(); player.fullscreen.enter(); } }
-        function streamDownload() { window.location.href = getCleanUrl(); }
-
-        // --- PLAYERS LOGIC (FIXED) ---
-        function mx_player() {
-            const url = getCleanUrl();
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};end`;
+        function streamDownload() {
+            const a = document.createElement('a'); a.href = getCleanUrl(); a.download = fileName;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
         }
 
-        function vlc_player() {
-            const url = getCleanUrl();
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.videolan.vlc;S.title=${encodeURIComponent(fileName)};end`;
-        }
-
-        function playit_player() {
-            const url = getCleanUrl();
-            // CORRECT PlayIt PACKAGE
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.playit.videoplayer;S.title=${encodeURIComponent(fileName)};end`;
-        }
-
+        // --- প্লেয়ার ইন্টেন্ট লজিক ---
+        function mx_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.mxtech.videoplayer.ad;end`; }
+        function vlc_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.videolan.vlc;end`; }
+        function playit_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.playit.videoplayer;end`; }
         function n_player() {
-            const url = getCleanUrl();
-            if (/Android/i.test(navigator.userAgent)) {
-                window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.newin.nplayer.pro;end`;
-            } else {
-                window.location.href = `nplayer-${url}`;
-            }
+            if (/Android/i.test(navigator.userAgent)) { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.newin.nplayer.pro;end`; }
+            else { window.location.href = `nplayer-${getCleanUrl()}`; }
         }
+        function system_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;end`; }
+        function km_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=com.kmplayer;end`; }
+        function kodi_player() { window.location.href = `intent:${getCleanUrl()}#Intent;action=android.intent.action.VIEW;type=video/*;package=org.xbmc.kodi;end`; }
 
-        function system_player() {
-            const url = getCleanUrl();
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;type=video/*;end`;
-        }
-
-        function km_player() {
-            const url = getCleanUrl();
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=com.kmplayer;end`;
-        }
-
-        function kodi_player() {
-            const url = getCleanUrl();
-            window.location.href = `intent:${url}#Intent;action=android.intent.action.VIEW;scheme=https;type=video/*;package=org.xbmc.kodi;end`;
-        }
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString();
-        }
+        function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
         setInterval(updateClock, 1000); updateClock();
 
-        function copyToClipboard() {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!"));
-        }
+        function copyToClipboard() { navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!")); }
 
-        const modal = document.getElementById('infoModal');
-        const modalBox = document.getElementById('modalBox');
-        function openModal() {
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => modalBox.classList.add('modal-active-anim'), 10);
-        }
-        function closeModal() {
-            modalBox.classList.remove('modal-active-anim');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-        }
+        function openModal() { document.getElementById('infoModal').classList.remove('hidden'); document.getElementById('infoModal').classList.add('flex'); }
+        function closeModal() { document.getElementById('infoModal').classList.add('hidden'); document.getElementById('infoModal').classList.remove('flex'); }
 
-        // Theme Toggle
+        // --- থিম টগল ---
         const themeBtn = document.getElementById("theme-toggle-btn");
         function applyTheme(mode) {
             if (mode === "light") {
@@ -389,4 +293,4 @@
         applyTheme(localStorage.getItem("prime_pref") || "dark");
     </script>
 </body>
-    </html>
+                                                     </html>
