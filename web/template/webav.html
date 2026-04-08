@@ -189,6 +189,45 @@
     opacity: 0; /* ডিফল্ট ০ থাকবে */
     z-index: 1;
         }
+
+        /* --- নতুন টেলিগ্রাম বাটন ও এনিমেশন --- */
+        @keyframes multi-glow {
+            0% { box-shadow: 0 0 15px #00e5ff, inset 0 0 10px #00e5ff; border-color: #00e5ff; }
+            33% { box-shadow: 0 0 15px #bc13fe, inset 0 0 10px #bc13fe; border-color: #bc13fe; }
+            66% { box-shadow: 0 0 15px #ff007f, inset 0 0 10px #ff007f; border-color: #ff007f; }
+            100% { box-shadow: 0 0 15px #00e5ff, inset 0 0 10px #00e5ff; border-color: #00e5ff; }
+        }
+        
+        .telegram-glow-btn {
+            position: relative;
+            overflow: hidden;
+            animation: multi-glow 4s infinite linear;
+            transition: transform 0.3s ease;
+            background-color: var(--bg-card);
+        }
+        
+        .telegram-glow-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* হাতের আইকনের এলোমেলো মুভমেন্ট */
+        @keyframes roam-cursor {
+            0% { top: 10%; left: 10%; transform: rotate(0deg); }
+            25% { top: 60%; left: 80%; transform: rotate(-15deg); }
+            50% { top: 20%; left: 50%; transform: rotate(10deg); }
+            75% { top: 70%; left: 20%; transform: rotate(-5deg); }
+            100% { top: 10%; left: 10%; transform: rotate(0deg); }
+        }
+        
+        .roaming-cursor {
+            position: absolute;
+            color: #ffffff;
+            font-size: 16px;
+            pointer-events: none; /* এর কারণে ক্লিক করতে সমস্যা হবে না */
+            filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.8));
+            animation: roam-cursor 5s infinite ease-in-out;
+            z-index: 5;
+        }
     </style>
 </head>
 <body class="antialiased pb-32">
@@ -275,6 +314,33 @@
                     <i class="fas fa-mobile-screen anim-wiggle mr-1"></i> NPLAYER
                 </button>
             </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="km_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-film anim-bounce text-purple-400 mr-1"></i> KM PLAYER
+                </button>
+                <button onclick="kodi_player()" class="btn-hover bg-btn-theme border text-gray-200 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-border-all anim-pulse text-blue-300 mr-1"></i> KODI
+                </button>
+                <button onclick="n_player()" class="btn-hover bg-btn-theme border text-cyan-400 rounded-full py-2 text-[10px] font-bold">
+                    <i class="fas fa-mobile-screen anim-wiggle mr-1"></i> NPLAYER
+                </button>
+            </div>
+
+            <!-- === নতুন টেলিগ্রাম বাটনটি এখানে যুক্ত হলো === -->
+            <div class="mt-6 mb-2 flex justify-center">
+                <a href="https://t.me/PrimeCineZone" target="_blank" class="telegram-glow-btn text-white border-2 rounded-full py-2.5 px-8 font-bold text-sm flex items-center justify-center w-full max-w-[280px] shadow-2xl">
+                    <!-- হার্টবিট টেলিগ্রাম আইকন -->
+                    <i class="fab fa-telegram text-[#00e5ff] text-xl anim-beat mr-2"></i> 
+                    JOIN TELEGRAM
+                    <!-- ভাসমান হাতের কার্সর -->
+                    <i class="fa-solid fa-hand-pointer roaming-cursor"></i>
+                </a>
+            </div>
+            <!-- === টেলিগ্রাম বাটন শেষ === -->
+
+        </div>
+    </main>
         </div>
     </main>
 
